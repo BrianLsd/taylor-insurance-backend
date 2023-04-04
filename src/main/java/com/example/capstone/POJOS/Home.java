@@ -1,32 +1,40 @@
 package com.example.capstone.POJOS;
 
+import com.example.capstone.Controller.RESTNamebook;
+import com.example.capstone.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
+
 /**
  * Creates Home objects having an age, dwelling type, heating type, location, and value
  */
+@Entity(name = "home")
 public class Home {
 
+    @Id @GeneratedValue(strategy = GenerationType.AUTO) private Integer id;
     private int age;
-    private DwellingType dwellingType;
-    private HeatingType heatingType;
-    private Location location;
+    @Enumerated(EnumType.ORDINAL) private DwellingType dwellingType;
+    @Enumerated(EnumType.ORDINAL) private HeatingType heatingType;
+    @Enumerated(EnumType.ORDINAL) private Location location;
     private double value;
+    @ManyToOne @JoinColumn(name = "user_id") private User user;
 
-    /**
-     * A constructor to create Home objects
-     * @param age The age of the home
-     * @param dwellingType The dwelling type of the home
-     * @param heatingType The heating type of the home
-     * @param location The location of the home
-     * @param value The value of the home
-     */
-    public Home(int age, DwellingType dwellingType, HeatingType heatingType,
-                Location location, double value) {
-        this.age = age;
-        this.dwellingType = dwellingType;
-        this.heatingType = heatingType;
-        this.location = location;
-        this.value = value;
-    }
+//    /**
+//     * A constructor to create Home objects
+//     * @param age The age of the home
+//     * @param dwellingType The dwelling type of the home
+//     * @param heatingType The heating type of the home
+//     * @param location The location of the home
+//     * @param value The value of the home
+//     */
+//    public Home(int age, DwellingType dwellingType, HeatingType heatingType,
+//                Location location, double value) {
+//        this.age = age;
+//        this.dwellingType = dwellingType;
+//        this.heatingType = heatingType;
+//        this.location = location;
+//        this.value = value;
+//    }
 
     /**
      * Gets the age of the Home object
@@ -106,5 +114,21 @@ public class Home {
      */
     public void setValue(double value) {
         this.value = value;
+    }
+
+    /**
+     * Gets the value of the user object
+     * @return user Homeowner
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * Sets the value of user object
+     * @param user Homeowner
+     */
+    public void setUser(User user) {
+        this.user = user;
     }
 }
