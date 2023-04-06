@@ -1,55 +1,48 @@
 package com.example.capstone.POJOS;
 
-import com.example.capstone.Controller.RESTNamebook;
 import com.example.capstone.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 /**
- * Creates Home objects having an age, dwelling type, heating type, location, and value
+ * Creates Home objects having a date built, dollar value, dwelling type, heating type, and location.
  */
 @Entity(name = "home")
 public class Home {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO) private Integer id;
-    private int age;
+    @JsonFormat(pattern="yyyy-MM-dd")  private LocalDate dateBuilt;
+    private double value;
     @Enumerated(EnumType.ORDINAL) private DwellingType dwellingType;
     @Enumerated(EnumType.ORDINAL) private HeatingType heatingType;
     @Enumerated(EnumType.ORDINAL) private Location location;
-    private double value;
+
     @ManyToOne @JoinColumn(name = "user_id") private User user;
 
-//    /**
-//     * A constructor to create Home objects
-//     * @param age The age of the home
-//     * @param dwellingType The dwelling type of the home
-//     * @param heatingType The heating type of the home
-//     * @param location The location of the home
-//     * @param value The value of the home
-//     */
-//    public Home(int age, DwellingType dwellingType, HeatingType heatingType,
-//                Location location, double value) {
-//        this.age = age;
-//        this.dwellingType = dwellingType;
-//        this.heatingType = heatingType;
-//        this.location = location;
-//        this.value = value;
-//    }
+    public Integer getId() {
+        return id;
+    }
 
-    /**
-     * Gets the age of the Home object
-     * @return age The age of the Home object
-     */
-    public int getAge() {
-        return age;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**
-     * Sets the age of the Home object
-     * @param age The age of the Home object
+     * Gets the date the Home was built
+     * @return dateBuilt The date the Home object was built
      */
-    public void setAge(int age) {
-        this.age = age;
+    public LocalDate getdateBuilt() {
+        return dateBuilt;
+    }
+
+    /**
+     * Sets the date the Home was built
+     * @param dateBuilt The date the Home object was built
+     */
+    public void setDateBuilt(LocalDate dateBuilt) {
+        this.dateBuilt = dateBuilt;
     }
 
     /**
