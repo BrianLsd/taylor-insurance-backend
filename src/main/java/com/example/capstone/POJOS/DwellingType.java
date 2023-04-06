@@ -6,7 +6,7 @@ package com.example.capstone.POJOS;
 public enum DwellingType {
 
     /**
-     *  Free-standing residential building
+     *  Freestanding residential building
      */
     SINGLE,
 

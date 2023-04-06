@@ -1,5 +1,8 @@
 package com.example.capstone.POJOS;
 
+import java.time.LocalDate;
+import java.time.Period;
+
 /**
  * Takes in Home attributes and returns the corresponding home risk factors
  */
@@ -37,10 +40,14 @@ public class HomeRiskRates {
 
     /**
      * returns the home age factor
-     * @param homeAge Age of Home
+     * @param dateBuilt Date the Home was built
      * @return 1, 1.25, or 1.5 Home Age Factor
      */
-    public static double getHomeAgeFactor(double homeAge){
+    public static double getHomeAgeFactor(LocalDate dateBuilt){
+        LocalDate today = LocalDate.now();
+        Period period = dateBuilt.until(today);
+        int homeAge = period.getYears();
+        System.out.println("Home age: "+ homeAge);
         if (homeAge > 50){
             return 1.5;
         } else if (homeAge > 25){
