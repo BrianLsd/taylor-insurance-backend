@@ -47,7 +47,6 @@ public class HomeRiskRates {
         LocalDate today = LocalDate.now();
         Period period = dateBuilt.until(today);
         int homeAge = period.getYears();
-        System.out.println("Home age: "+ homeAge);
         if (homeAge > 50){
             return 1.5;
         } else if (homeAge > 25){

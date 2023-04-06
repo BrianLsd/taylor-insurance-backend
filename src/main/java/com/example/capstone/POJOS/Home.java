@@ -33,7 +33,7 @@ public class Home {
      * Gets the date the Home was built
      * @return dateBuilt The date the Home object was built
      */
-    public LocalDate getdateBuilt() {
+    public LocalDate getDateBuilt() {
         return dateBuilt;
     }
 

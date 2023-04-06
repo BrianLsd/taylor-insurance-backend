@@ -1,24 +1,35 @@
 package com.example.capstone.POJOS;
 
+import com.example.capstone.User;
+import jakarta.persistence.*;
+
 /**
  * Create Vehicle objects having a year, model and make of the vehicle
  */
+@Entity(name = "auto")
 public class Vehicle {
 
+    @Id @GeneratedValue(strategy = GenerationType.AUTO) private Integer id;
     private int year;
     private String model;
     private String make;
 
+    @ManyToOne @JoinColumn(name = "user_id") private User user;
+
     /**
-     * A Constructor to create vehicle objects
-     * @param year The vehicle year
-     * @param model The vehicle model
-     * @param make The vehicle make
+     * Gets the id of a vehicle object
+     * @return An integer representing the vehicle's id
      */
-    public Vehicle(int year, String model, String make) {
-        this.year = year;
-        this.model = model;
-        this.make = make;
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * Receives an integer parameter and sets it as the id of a vehicle object
+     * @param id An integer representing the vehicle's id
+     */
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**
@@ -67,5 +78,21 @@ public class Vehicle {
      */
     public void setMake(String make) {
         this.make = make;
+    }
+
+    /**
+     * Gets the value of the user object
+     * @return user Auto owner
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * Sets the value of user object
+     * @param user Auto owner
+     */
+    public void setUser(User user) {
+        this.user = user;
     }
 }
