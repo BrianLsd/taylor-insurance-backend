@@ -14,6 +14,7 @@ public class HomeOwner extends Person{
     @Id @GeneratedValue(strategy = GenerationType.AUTO) private Integer id;
     private int age;
     private String address;
+
     @OneToOne @JoinColumn(name = "user_id") private User user;
 
     /**

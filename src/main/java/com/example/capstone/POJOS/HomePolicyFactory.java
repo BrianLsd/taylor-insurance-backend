@@ -29,7 +29,7 @@ public class HomePolicyFactory {
      */
     public HomePolicy renewHomePolicy(HomePolicy homePolicy){
         if (ChronoUnit.DAYS.between(homePolicy.getEndDate(), LocalDate.now()) <= 60){
-            return new HomePolicy.Builder(homePolicy.getHomeOwner(), homePolicy.getHome(), homePolicy.getLiabilityLimit(),
+            return new HomePolicy.Builder(homePolicy.getInsuredPerson(), homePolicy.getHome(), homePolicy.getLiabilityLimit(),
                     homePolicy.getDeductible(), homePolicy.getContentsInsuranceLimit()
                     , homePolicy.getContentsDeductible(), homePolicy.getBasePremium(), homePolicy.getTax(), homePolicy.getTotalPremium()).build();
         } else {

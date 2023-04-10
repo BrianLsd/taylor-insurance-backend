@@ -1,17 +1,38 @@
 package com.example.capstone.POJOS;
 
+import com.example.capstone.User;
+import jakarta.persistence.*;
+
 /**
  * Extends Policy Abstract class to create Policies
  */
+@Entity(name = "homepolicy")
 public class HomePolicy extends Policy {
-    private final HomeOwner homeOwner;
-    private final Home home;
+    @Id @GeneratedValue(strategy = GenerationType.AUTO) private Integer id;
+    @OneToOne private final HomeOwner homeOwner;
+    @OneToOne private final Home home;
     private final double liabilityLimit;
     private final double deductible;
     private final double contentsInsuranceLimit;
     private final double contentsDeductible;
     private final double basePremium;
     private final double tax;
+    private final double totalPremium;
+
+    @ManyToOne @JoinColumn(name = "user_id") private User user;
+
+    protected HomePolicy() {
+        super(null, 0);
+        this.homeOwner = null;
+        this.home = null;
+        this.liabilityLimit = 0;
+        this.deductible = 0;
+        this.contentsInsuranceLimit = 0;
+        this.contentsDeductible = 0;
+        this.basePremium = 0;
+        this.tax = 0;
+        this.totalPremium = 0;
+    }
 
     /**
      * A constructor to build Home Policies
@@ -27,6 +48,23 @@ public class HomePolicy extends Policy {
         this.deductible = builder.deductible;
         this.basePremium =builder.basePremium;
         this.tax = builder.tax;
+        this.totalPremium = builder.totalPremium;
+    }
+
+    /**
+     * Gets the id of a vehicle object
+     * @return An integer representing the vehicle's id
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * Receives an integer parameter and sets it as the id of a vehicle object
+     * @param id An integer representing the vehicle's id
+     */
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**
@@ -89,8 +127,33 @@ public class HomePolicy extends Policy {
      * Gets the Home-Owner of a Home Policy object
      * @return A HomeOwner object representing the Home-Owner of a Home Policy object
      */
-    public HomeOwner getHomeOwner() {
+    @Override
+    public HomeOwner getInsuredPerson() {
         return homeOwner;
+    }
+
+    /**
+     * Gets the Total Premium of a Home Policy object
+     * @return A numeric value representing the Total Premium of a Home Policy object
+     */
+    public double getTotalPremium() {
+        return totalPremium;
+    }
+
+    /**
+     * Gets the value of the user object
+     * @return user Auto owner
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * Sets the value of user object
+     * @param user Auto owner
+     */
+    public void setUser(User user) {
+        this.user = user;
     }
 
     /**

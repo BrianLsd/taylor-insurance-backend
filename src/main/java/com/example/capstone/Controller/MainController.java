@@ -29,6 +29,10 @@ public class MainController {
     private AutoQuoteRepository autoQuoteRepository;
     @Autowired
     private HomeQuoteRepository homeQuoteRepository;
+    @Autowired
+    private AutoPolicyRepository autoPolicyRepository;
+    @Autowired
+    private HomePolicyRepository homePolicyRepository;
 
     // User - use this to login
 
@@ -676,7 +680,7 @@ public class MainController {
      * Post Mapping for HomeQuote - Add a new home quote
      * @param user_id user id
      * @param home_id home id
-     * @return message stating success
+     * @return message stating success / failure
      */
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEQUOTES + "/{home_id}")
     public @ResponseBody String addNewHomeQuote(@PathVariable(name = "user_id") Integer user_id,
@@ -722,6 +726,153 @@ public class MainController {
             }
         } else {
             return "Home quote not found.";
+        }
+    }
+
+    // Auto Policy
+    /**
+     * Get all auto policies
+     * @return return all auto policies
+     */
+    @GetMapping(path = RESTNamebook.USERS + RESTNamebook.AUTOPOLICIES)
+    public @ResponseBody Iterable<AutoPolicy> getAllAutoPolicies() {
+        return autoPolicyRepository.findAll();
+    }
+
+    /**
+     * Get all auto policies by user
+     * @param user_id user id
+     * @return return all auto policies by user
+     */
+    @GetMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOPOLICIES)
+    public @ResponseBody Iterable<AutoPolicy> getAllAutoPoliciesByUser(@PathVariable(name = "user_id") Integer user_id) {
+        Optional<User> user = userRepository.findById(user_id);
+        Iterable<AutoPolicy> autoPolicies = new LinkedList<>();
+
+        if (user.isPresent()) {
+            autoPolicies = autoPolicyRepository.getAllByUserId(user.get().getId());
+        }
+        return autoPolicies;
+    }
+
+    /**
+     * Post Mapping for AutoPolicy - Add a new auto policy
+     * @param user_id user id
+     * @param autoquote_id auto quote id
+     * @return message stating success
+     */
+    @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOPOLICIES + "/{autoquote_id}")
+    public @ResponseBody String addNewAutoPolicy(@PathVariable(name = "user_id") Integer user_id,
+                                                 @PathVariable(name = "autoquote_id") Integer autoquote_id) {
+        Optional<User> user = userRepository.findById(user_id);
+        Optional<AutoQuote> autoQuote = autoQuoteRepository.findById(autoquote_id);
+        if (user.isPresent()){
+            if (autoQuote.isPresent()){
+                AutoPolicy autoPolicy = AutoPolicyFactory.createAutoPolicy(autoQuote.get());
+                autoPolicy.setUser(user.get());
+                autoPolicyRepository.save(autoPolicy);
+                return "The auto policy has been saved into the database.";
+            } else {
+                return "You haven't entered your auto quote information yet.";
+            }
+        } else {
+            return "User not found";
+        }
+    }
+
+    /**
+     * Delete Mapping for AutoPolicy based on ID - delete auto policy
+     * @param user_id user id
+     * @param autopolicy_id auto policy id
+     * @return message stating success / failure
+     */
+    @DeleteMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOPOLICIES + "/{autopolicy_id}")
+    public @ResponseBody String deleteAutoPolicy(@PathVariable(name = "user_id") Integer user_id,
+                                                 @PathVariable(name = "autopolicy_id") Integer autopolicy_id) {
+        Optional<AutoPolicy> autoPolicy = autoPolicyRepository.findById(autopolicy_id);
+        if (autoPolicy.isPresent()) {
+            Optional<User> user = userRepository.findById(user_id);
+            if (user.isPresent() && Objects.equals(autoPolicy.get().getInsuredPerson().getUser().getId(), user.get().getId())) {
+                autoPolicyRepository.deleteById(autopolicy_id);
+                return "The auto policy has been deleted from the database.";
+            } else {
+                return "User not found.";
+            }
+        } else {
+            return "Auto policy not found.";
+        }
+    }
+
+    /**
+     * Get all home policies
+     * @return return all home policies
+     */
+    @GetMapping(path = RESTNamebook.USERS + RESTNamebook.HOMEPOLICIES)
+    public @ResponseBody Iterable<HomePolicy> getAllHomePolicies() {
+        return homePolicyRepository.findAll();
+    }
+
+    /**
+     * Get all home policies by user
+     * @param user_id user id
+     * @return return all home policies by user
+     */
+    @GetMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEPOLICIES)
+    public @ResponseBody Iterable<HomePolicy> getAllHomePoliciesByUser(@PathVariable(name = "user_id") Integer user_id) {
+        Optional<User> user = userRepository.findById(user_id);
+        Iterable<HomePolicy> homePolicies = new LinkedList<>();
+
+        if (user.isPresent()) {
+            homePolicies = homePolicyRepository.getAllByUserId(user.get().getId());
+        }
+        return homePolicies;
+    }
+
+    /**
+     * Post Mapping for HomePolicy based on ID - create a home policy
+     * @param user_id user id
+     * @param homequote_id home policy id
+     * @return message stating success / failure
+     */
+    @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEPOLICIES + "/{homequote_id}")
+    public @ResponseBody String addNewHomePolicy(@PathVariable(name = "user_id") Integer user_id,
+                                                 @PathVariable(name = "homequote_id") Integer homequote_id) {
+        Optional<User> user = userRepository.findById(user_id);
+        Optional<HomeQuote> homeQuote = homeQuoteRepository.findById(homequote_id);
+        if (user.isPresent()){
+            if (homeQuote.isPresent()){
+                HomePolicy homePolicy = HomePolicyFactory.createHomePolicy(homeQuote.get());
+                homePolicy.setUser(user.get());
+                homePolicyRepository.save(homePolicy);
+                return "The home policy has been saved into the database.";
+            } else {
+                return "You haven't entered your home quote information yet.";
+            }
+        } else {
+            return "User not found";
+        }
+    }
+
+    /**
+     * Delete Mapping for HomePolicy based on ID - delete home policy
+     * @param user_id user id
+     * @param homepolicy_id home policy id
+     * @return message stating success / failure
+     */
+    @DeleteMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEPOLICIES + "/{homepolicy_id}")
+    public @ResponseBody String deleteHomePolicy(@PathVariable(name = "user_id") Integer user_id,
+                                                 @PathVariable(name = "homepolicy_id") Integer homepolicy_id) {
+        Optional<HomePolicy> homePolicy = homePolicyRepository.findById(homepolicy_id);
+        if (homePolicy.isPresent()) {
+            Optional<User> user = userRepository.findById(user_id);
+            if (user.isPresent()) {
+                homePolicyRepository.deleteById(homepolicy_id);
+                return "The home policy has been deleted from the database.";
+            } else {
+                return "User not found.";
+            }
+        } else {
+            return "Home policy not found.";
         }
     }
 }
