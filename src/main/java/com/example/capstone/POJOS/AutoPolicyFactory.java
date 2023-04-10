@@ -15,7 +15,7 @@ public class AutoPolicyFactory {
      * @return autoPolicy Auto Policy
      */
     public static AutoPolicy createAutoPolicy(AutoQuote autoQuote){
-        return new AutoPolicy.Builder(autoQuote.getDriver(), autoQuote.getVehicle(), autoQuote.getLiabilityLimit(),
+        return new AutoPolicy.Builder(autoQuote.getInsuredPerson(), autoQuote.getVehicle(), autoQuote.getLiabilityLimit(),
                 autoQuote.getDeductible(), autoQuote.getBasePremium(), autoQuote.getTax(), autoQuote.getTotalPremium()).build();
     }
 

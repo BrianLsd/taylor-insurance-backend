@@ -1,5 +1,7 @@
 package com.example.capstone.POJOS;
 
+import java.text.DecimalFormat;
+
 /**
  * Factory class, create AutoQuote objects
  */
@@ -17,6 +19,8 @@ public class AutoQuoteFactory{
         double totalPremium = AutoRiskRates.getPremium() * AutoRiskRates.getDriverAgeFactor(driver.getAge()) *
                 AutoRiskRates.getAccidentsFactor(driver.getNumberAccidents()) * AutoRiskRates.getVehicleAgeFactor(vehicle.getYear())
                 * AutoRiskRates.getTax();
+        DecimalFormat df = new DecimalFormat("#.##");
+        totalPremium = Double.parseDouble(df.format(totalPremium));
         return new AutoQuote.Builder(driver, vehicle, 1000000, 500, AutoRiskRates.getPremium(),
                 AutoRiskRates.getTax(), totalPremium).build();
     }

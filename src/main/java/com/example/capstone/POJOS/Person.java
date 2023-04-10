@@ -8,16 +8,6 @@ public abstract class Person {
     private String address;
 
     /**
-     * A constructor to create Person objects
-     * @param age The age of the Person object
-     * @param address The address of the Person object
-     */
-    public Person(int age, String address) {
-        this.age = age;
-        this.address = address;
-    }
-
-    /**
      * Gets the age of the Person object
      * @return age The age of the Person object
      */

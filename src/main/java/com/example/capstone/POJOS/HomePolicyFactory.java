@@ -15,7 +15,7 @@ public class HomePolicyFactory {
      * @return homePolicy Home Policy
      */
     public static HomePolicy createHomePolicy(HomeQuote homeQuote){
-        return new HomePolicy.Builder(homeQuote.getHomeOwner(), homeQuote.getHome(), homeQuote.getLiabilityLimit(),
+        return new HomePolicy.Builder(homeQuote.getInsuredPerson(), homeQuote.getHome(), homeQuote.getLiabilityLimit(),
                 homeQuote.getDeductible(), homeQuote.getContentsInsuranceLimit()
                 , homeQuote.getContentsDeductible(), homeQuote.getBasePremium(), homeQuote.getTax(), homeQuote.getTotalPremium()).build();
     }

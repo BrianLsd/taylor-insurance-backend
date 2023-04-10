@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class Home {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO) private Integer id;
-    @JsonFormat(pattern="yyyy-MM-dd")  private LocalDate dateBuilt;
+    @JsonFormat(pattern="yyyy-MM-dd") private LocalDate dateBuilt;
     private double value;
     @Enumerated(EnumType.ORDINAL) private DwellingType dwellingType;
     @Enumerated(EnumType.ORDINAL) private HeatingType heatingType;

@@ -1,28 +1,36 @@
 package com.example.capstone.POJOS;
 
+import com.example.capstone.User;
+import jakarta.persistence.*;
+
 /**
  * Extends Person Abstract class
  * Creates Driver objects having an age, address, and number of accidents
  */
+@Entity(name = "driver")
 public class Driver extends Person {
 
+    @Id @GeneratedValue(strategy = GenerationType.AUTO) private Integer id;
     private int age;
-
     private String address;
-
     private int numberAccidents;
 
+    @OneToOne @JoinColumn(name = "user_id") private User user;
+
     /**
-     * A constructor to create Driver objects
-     * @param age The age of the Driver object
-     * @param address The address of the Driver object
-     * @param numberAccidents The number of accidents the Driver object has had
+     * Gets the id of a vehicle object
+     * @return An integer representing the vehicle's id
      */
-    public Driver(int age, String address, int numberAccidents) {
-        super(age, address);
-        this.age = age;
-        this.address = address;
-        this.numberAccidents = numberAccidents;
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * Receives an integer parameter and sets it as the id of a vehicle object
+     * @param id An integer representing the vehicle's id
+     */
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**
@@ -71,5 +79,21 @@ public class Driver extends Person {
      */
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    /**
+     * Gets the value of the user object
+     * @return user Auto owner
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * Sets the value of user object
+     * @param user Auto owner
+     */
+    public void setUser(User user) {
+        this.user = user;
     }
 }

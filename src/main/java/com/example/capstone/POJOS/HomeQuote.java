@@ -1,25 +1,47 @@
 package com.example.capstone.POJOS;
 
+import com.example.capstone.User;
+import jakarta.persistence.*;
+
 /**
  * Extends Quote Abstract class
  * Creates a Home Quote having a Home-Owner, Home, Liability Limit, Deductible,
  * ... Contents Insurance Limit, Content Deductible, base premium, and tax
  */
+@Entity(name = "homequote")
 public class HomeQuote extends Quote {
-    private final HomeOwner homeOwner;
-    private final Home home;
+    @Id @GeneratedValue(strategy = GenerationType.AUTO) private Integer id;
+    @OneToOne private final HomeOwner homeOwner;
+    @OneToOne private final Home home;
     private final double liabilityLimit;
     private final double deductible;
     private final double contentsInsuranceLimit;
     private final double contentsDeductible;
+    private final double totalPremium;
     private final double basePremium;
     private final double tax;
+
+    @ManyToOne @JoinColumn(name = "user_id") private User user;
+
+    // default constructor
+    protected HomeQuote() {
+        super(null, 0);
+        this.homeOwner = null;
+        this.home = null;
+        this.liabilityLimit = 0;
+        this.deductible = 0;
+        this.contentsInsuranceLimit = 0;
+        this.contentsDeductible = 0;
+        this.totalPremium = 0;
+        this.basePremium = 0;
+        this.tax = 0;
+    }
 
     /**
      * A constructor to build Home Quote objects
      * @param builder The Builder object to build a Home Quote
      */
-    private HomeQuote(Builder builder) {
+    protected HomeQuote(Builder builder) {
         super(builder.homeOwner, builder.totalPremium);
         this.homeOwner = builder.homeOwner;
         this.home = builder.home;
@@ -27,8 +49,25 @@ public class HomeQuote extends Quote {
         this.contentsDeductible = builder.contentsDeductible;
         this.liabilityLimit = builder.liabilityLimit;
         this.deductible = builder.deductible;
+        this.totalPremium = builder.totalPremium;
         this.basePremium =builder.basePremium;
         this.tax = builder.tax;
+    }
+
+    /**
+     * Gets the id of a vehicle object
+     * @return An integer representing the vehicle's id
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * Receives an integer parameter and sets it as the id of a vehicle object
+     * @param id An integer representing the vehicle's id
+     */
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**
@@ -72,6 +111,14 @@ public class HomeQuote extends Quote {
     }
 
     /**
+     * Gets the Total Premium of a Home Quote object
+     * @return A numeric value representing the Total Premium of a Home Quote object
+     */
+    public double getTotalPremium() {
+        return totalPremium;
+    }
+
+    /**
      * Gets the Base Premium of a Home Quote object
      * @return A numeric value representing the Base Premium of a Home Quote object
      */
@@ -91,8 +138,25 @@ public class HomeQuote extends Quote {
      * Gets the Home-Owner of a Home Quote object
      * @return A HomeOwner object representing the Home-Owner of a Home Quote object
      */
-    public HomeOwner getHomeOwner() {
+    @Override
+    public HomeOwner getInsuredPerson() {
         return homeOwner;
+    }
+
+    /**
+     * Gets the value of the user object
+     * @return user Auto owner
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * Sets the value of user object
+     * @param user Auto owner
+     */
+    public void setUser(User user) {
+        this.user = user;
     }
 
     /**

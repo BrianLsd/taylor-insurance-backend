@@ -6,7 +6,7 @@ import java.time.LocalDate;
  * An abstract class to be extended by concrete quote classes
  */
 public abstract class Quote {
-    private final Person driver;
+    private final Person insuredPerson;
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final double totalPremium;
@@ -16,19 +16,11 @@ public abstract class Quote {
      * @param driver The driver object
      * @param totalPremium The total premium
      */
-    public Quote(Person driver, double totalPremium) {
-        this.driver = driver;
+    public Quote(Person insuredPerson, double totalPremium) {
+        this.insuredPerson = insuredPerson;
         this.startDate = LocalDate.now();
         this.endDate = LocalDate.now().plusDays(30);
         this.totalPremium = totalPremium;
-    }
-
-    /**
-     * Gets the driver object of the Quote object
-     * @return driver A Person object representing a quote's driver
-     */
-    public Person getInsuredPerson() {
-        return driver;
     }
 
     /**
@@ -59,7 +51,7 @@ public abstract class Quote {
      * Gets the driver object of the Quote object
      * @return driver A Person object representing a quote's driver
      */
-    public Person getDriver() {
-        return driver;
+    public Person getInsuredPerson() {
+        return insuredPerson;
     }
 }

@@ -1,5 +1,7 @@
 package com.example.capstone.POJOS;
 
+import java.text.DecimalFormat;
+
 /**
  * Factory class, create HomeQuote objects
  */
@@ -16,6 +18,8 @@ public class HomeQuoteFactory{
     public static HomeQuote createHomeQuote(Home home, HomeOwner homeOwner){
         double totalPremium = (HomeRiskRates.getPremium() + HomeRiskRates.getHomeValueFactor(home.getValue())) *  HomeRiskRates.getHomeAgeFactor(home.getDateBuilt())
                 * HomeRiskRates.getHeatingFactor(home.getHeatingType()) * HomeRiskRates.getLocationFactor(home.getLocation()) * HomeRiskRates.getTax();
+        DecimalFormat df = new DecimalFormat("#.##");
+        totalPremium = Double.parseDouble(df.format(totalPremium));
         return new HomeQuote.Builder(homeOwner, home, 2000000, 1000, 50000, 500,
                 HomeRiskRates.getPremium(), HomeRiskRates.getTax(), totalPremium).build();
     }
