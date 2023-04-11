@@ -35,11 +35,10 @@ public class MainController {
     private HomePolicyRepository homePolicyRepository;
 
     // User - use this to login
-
     /**
-     * Get Mapping for User
+     * Get Mapping for all Users - read all users
      *
-     * @return all users
+     * @return Iterable of all users
      */
     @GetMapping(path = RESTNamebook.USERS)
     public @ResponseBody Iterable<User> getAllUsers() {
@@ -47,12 +46,12 @@ public class MainController {
     }
 
     /**
-     * Get Mapping for User based on ID
+     * Get Mapping for User using ID - read user
      *
      * @param user_id user id
      * @return user object
      */
-    @GetMapping(path = RESTNamebook.USERS + RESTNamebook.USER_ID)
+    @GetMapping(path = RESTNamebook.USERS + "/{user_id}")
     public @ResponseBody Optional<User> getUserWithId(@PathVariable Integer user_id) {
         return userRepository.findById(user_id);
     }
@@ -74,14 +73,14 @@ public class MainController {
     }
 
     /**
-     * Put Mapping for User based on ID - update user
+     * Put Mapping for User using ID - update user
      *
      * @param user_id user id
      * @param name    name of user
      * @param email   email of user
      * @return message stating success / failure
      */
-    @PutMapping(path = RESTNamebook.USERS + RESTNamebook.USER_ID)
+    @PutMapping(path = RESTNamebook.USERS + "/{user_id}")
     public @ResponseBody String updateUser(@PathVariable Integer user_id, @RequestParam String name, @RequestParam String email) {
         Optional<User> optionalUser = userRepository.findById(user_id);
         if (optionalUser.isPresent()) {
@@ -96,12 +95,12 @@ public class MainController {
     }
 
     /**
-     * Delete Mapping for User based on ID
+     * Delete Mapping for User using ID - delete user
      *
      * @param user_id user id
      * @return message stating success / failure
      */
-    @DeleteMapping(path = RESTNamebook.USERS + RESTNamebook.USER_ID)
+    @DeleteMapping(path = RESTNamebook.USERS + "/{user_id}")
     public @ResponseBody String deleteUser(@PathVariable Integer user_id) {
         Optional<User> optionalUser = userRepository.findById(user_id);
         if (optionalUser.isPresent()) {
@@ -113,10 +112,121 @@ public class MainController {
         }
     }
 
-    // Home
+    // Auto
+    /**
+     * Get Mapping for all Autos - read all autos
+     *
+     * @return Iterable of all autos
+     */
+    @GetMapping(path = RESTNamebook.USERS + RESTNamebook.AUTOS)
+    public @ResponseBody Iterable<Vehicle> getAllAutos() {
+        return autoRepository.findAll();
+    }
 
     /**
-     * Get Mapping for Home
+     * Get Mapping for all Autos using User ID - read all autos of a user
+     *
+     * @param user_id user id
+     * @return Iterable of all autos by user
+     */
+    @GetMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOS)
+    public @ResponseBody Iterable<Vehicle> getAllAutosByUser(@PathVariable(name = "user_id") Integer user_id) {
+        Optional<User> user = userRepository.findById(user_id);
+        Iterable<Vehicle> autos = new LinkedList<>();
+
+        if (user.isPresent()) {
+            autos = autoRepository.getAllByUserId(user.get().getId());
+        }
+        return autos;
+    }
+
+    /**
+     * Post Mapping for Auto using User ID - create auto for a user
+     *
+     * @param user_id user id
+     * @param year    year
+     * @param model   model
+     * @param make    make
+     * @return message stating success / failure
+     */
+    @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOS)
+    public @ResponseBody String addNewAuto(@PathVariable(name = "user_id") Integer user_id,
+                                           @RequestParam int year,
+                                           @RequestParam String model,
+                                           @RequestParam String make) {
+        Vehicle vehicle = new Vehicle();
+        vehicle.setYear(year);
+        vehicle.setModel(model);
+        vehicle.setMake(make);
+
+        Optional<User> optionalUser = userRepository.findById(user_id);
+        if (optionalUser.isPresent()) {
+            vehicle.setUser(optionalUser.get());
+            autoRepository.save(vehicle);
+            return "The vehicle has been saved into the database.";
+        } else {
+            return "The vehicle failed to be saved into the database.";
+        }
+    }
+
+    /**
+     * Put Mapping for Auto using User ID and Auto ID - update auto of a user
+     *
+     * @param user_id user id
+     * @param auto_id auto id
+     * @return message stating success / failure
+     */
+    @PutMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOS + "/{auto_id}")
+    public @ResponseBody String updateAuto(@PathVariable(name = "user_id") Integer user_id,
+                                           @PathVariable(name = "auto_id") Integer auto_id,
+                                           @RequestParam int year,
+                                           @RequestParam String model,
+                                           @RequestParam String make) {
+        Optional<User> optionalUser = userRepository.findById(user_id);
+        if (optionalUser.isPresent()) {
+            Optional<Vehicle> optionalAuto = autoRepository.findById(auto_id);
+            if (optionalAuto.isPresent()) {
+                Vehicle vehicle = optionalAuto.get();
+                vehicle.setYear(year);
+                vehicle.setModel(model);
+                vehicle.setMake(make);
+                autoRepository.save(vehicle);
+                return "The auto has been updated in the database.";
+            } else {
+                return "Auto not found.";
+            }
+        } else {
+            return "User not found.";
+        }
+    }
+
+    /**
+     * Delete Mapping for Auto using User ID and Auto ID - delete auto of a user
+     *
+     * @param user_id user id
+     * @param auto_id auto id
+     * @return message stating success / failure
+     */
+    @DeleteMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOS + "/{auto_id}")
+    public @ResponseBody String deleteAuto(@PathVariable Integer user_id,
+                                           @PathVariable Integer auto_id) {
+        Optional<User> optionalUser = userRepository.findById(user_id);
+        if (optionalUser.isPresent()) {
+            Optional<Vehicle> optionalAuto = autoRepository.findById(auto_id);
+            if (optionalAuto.isPresent()) {
+                autoRepository.deleteById(auto_id);
+                return "The auto has been deleted from the database.";
+            } else {
+                return "Auto not found.";
+            }
+        } else {
+            return "User not found.";
+        }
+    }
+
+    // Home
+    /**
+     * Get Mapping for all Homes - read all homes
      *
      * @return all homes
      */
@@ -126,7 +236,7 @@ public class MainController {
     }
 
     /**
-     * Get Mapping for Home based on ID
+     * Get Mapping for all Homes using User ID - read all homes of a user
      *
      * @param user_id user id
      * @return home object
@@ -143,7 +253,7 @@ public class MainController {
     }
 
     /**
-     * Post Mapping for Home - create home
+     * Post Mapping for Home using User ID - create home for a user
      *
      * @param user_id      user id
      * @param dateBuilt    date built
@@ -179,7 +289,7 @@ public class MainController {
     }
 
     /**
-     * Put Mapping for Home based on ID - update home
+     * Put Mapping for Home using User ID and Home ID - update home for a user
      *
      * @param user_id      user id
      * @param home_id      home id
@@ -218,7 +328,7 @@ public class MainController {
     }
 
     /**
-     * Delete Mapping for Home based on ID
+     * Delete Mapping for Home using User ID and Home ID - delete home for a user
      *
      * @param user_id user id
      * @param home_id home id
@@ -240,123 +350,9 @@ public class MainController {
         }
     }
 
-    // Auto
-
+    // Driver - if a user chooses to go with auto insurance, create a Driver object for the user.
     /**
-     * Get all autos
-     *
-     * @return Iterable of all autos
-     */
-    @GetMapping(path = RESTNamebook.USERS + RESTNamebook.AUTOS)
-    public @ResponseBody Iterable<Vehicle> getAllAutos() {
-        return autoRepository.findAll();
-    }
-
-    /**
-     * Get all autos by user
-     *
-     * @param user_id user id
-     * @return Iterable of all autos by user
-     */
-    @GetMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOS)
-    public @ResponseBody Iterable<Vehicle> getAllAutosByUser(@PathVariable(name = "user_id") Integer user_id) {
-        Optional<User> user = userRepository.findById(user_id);
-        Iterable<Vehicle> autos = new LinkedList<>();
-
-        if (user.isPresent()) {
-            autos = autoRepository.getAllByUserId(user.get().getId());
-        }
-        return autos;
-    }
-
-    /**
-     * Get auto by id
-     *
-     * @param user_id user id
-     * @param year    year
-     * @param model   model
-     * @param make    make
-     * @return message stating success / failure
-     */
-    @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOS)
-    public @ResponseBody String addNewAuto(@PathVariable(name = "user_id") Integer user_id,
-                                           @RequestParam int year,
-                                           @RequestParam String model,
-                                           @RequestParam String make) {
-        Vehicle vehicle = new Vehicle();
-        vehicle.setYear(year);
-        vehicle.setModel(model);
-        vehicle.setMake(make);
-
-        Optional<User> optionalUser = userRepository.findById(user_id);
-        if (optionalUser.isPresent()) {
-            vehicle.setUser(optionalUser.get());
-            autoRepository.save(vehicle);
-            return "The auto has been saved into the database.";
-        } else {
-            return "The auto failed to be saved into the database.";
-        }
-    }
-
-    /**
-     * Delete Mapping for Auto based on ID
-     *
-     * @param user_id user id
-     * @param auto_id auto id
-     * @return message stating success / failure
-     */
-    @PutMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOS + "/{auto_id}")
-    public @ResponseBody String updateAuto(@PathVariable(name = "user_id") Integer user_id,
-                                           @PathVariable(name = "auto_id") Integer auto_id,
-                                           @RequestParam int year,
-                                           @RequestParam String model,
-                                           @RequestParam String make) {
-        Optional<User> optionalUser = userRepository.findById(user_id);
-        if (optionalUser.isPresent()) {
-            Optional<Vehicle> optionalAuto = autoRepository.findById(auto_id);
-            if (optionalAuto.isPresent()) {
-                Vehicle vehicle = optionalAuto.get();
-                vehicle.setYear(year);
-                vehicle.setModel(model);
-                vehicle.setMake(make);
-                autoRepository.save(vehicle);
-                return "The auto has been updated in the database.";
-            } else {
-                return "Auto not found.";
-            }
-        } else {
-            return "User not found.";
-        }
-    }
-
-    /**
-     * Delete Mapping for Auto based on ID
-     *
-     * @param user_id user id
-     * @param auto_id auto id
-     * @return message stating success / failure
-     */
-    @DeleteMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOS + "/{auto_id}")
-    public @ResponseBody String deleteAuto(@PathVariable Integer user_id,
-                                           @PathVariable Integer auto_id) {
-        Optional<User> optionalUser = userRepository.findById(user_id);
-        if (optionalUser.isPresent()) {
-            Optional<Vehicle> optionalAuto = autoRepository.findById(auto_id);
-            if (optionalAuto.isPresent()) {
-                autoRepository.deleteById(auto_id);
-                return "The auto has been deleted from the database.";
-            } else {
-                return "Auto not found.";
-            }
-        } else {
-            return "User not found.";
-        }
-    }
-
-    // Driver - if a user chooses to go with auto, create a driver object for the user
-
-    /**
-     * Get all drivers
+     * Get Mapping for all Drivers - read all drivers
      *
      * @return return all drivers
      */
@@ -366,7 +362,7 @@ public class MainController {
     }
 
     /**
-     * Get drivers by ID
+     * Get Mapping for all Drivers using User ID - read all drivers of a user
      *
      * @param user_id user id
      * @return return all drivers by user ID
@@ -383,7 +379,7 @@ public class MainController {
     }
 
     /**
-     * Add a new driver
+     * Post Mapping for Driver using User ID - create a driver for a user
      *
      * @param user_id         user id
      * @param age             age
@@ -412,7 +408,7 @@ public class MainController {
     }
 
     /**
-     * Put Mapping for Driver based on ID - update driver
+     * Put Mapping for Driver using User ID and Driver ID - update driver of a user
      *
      * @param user_id   user id
      * @param driver_id driver id
@@ -443,7 +439,7 @@ public class MainController {
     }
 
     /**
-     * Delete Mapping for Driver based on ID - delete driver
+     * Delete Mapping for Driver using User ID and Driver ID - delete driver of a user
      *
      * @param user_id   user id
      * @param driver_id driver id
@@ -466,10 +462,9 @@ public class MainController {
         }
     }
 
-    // Homeowner - if a user chooses to go with home, create a Homeowner object for the user
-
+    // Homeowner - if a user chooses to go with home insurance, create a Homeowner object for the user.
     /**
-     * Get all homeowners
+     * Get Mapping for all Homeowners - read all homeowners
      * @return return all homeowners
      */
     @GetMapping(path = RESTNamebook.USERS + RESTNamebook.HOMEOWNERS)
@@ -478,7 +473,7 @@ public class MainController {
     }
 
     /**
-     * Get a homeowner by ID
+     * Get Mapping for all Homeowners using User ID - read all homeowners for a user
      * @param user_id user id
      * @return return all homeowners by user ID
      */
@@ -494,7 +489,7 @@ public class MainController {
     }
 
     /**
-     * Post Mapping for Homeowner - Add a new homeowner
+     * Post Mapping for Homeowner using User ID - create homeowner for a user
      * @param user_id user id
      * @param age age
      * @param address address
@@ -519,7 +514,7 @@ public class MainController {
     }
 
     /**
-     * Put Mapping for Homeowner based on ID - update homeowner
+     * Put Mapping for Homeowner using User ID and Homeowner ID - update homeowner of a user
      * @param user_id user id
      * @param homeowner_id homeowner id
      * @param age age
@@ -549,7 +544,7 @@ public class MainController {
     }
 
     /**
-     * Delete Mapping for Homeowner based on ID - delete homeowner
+     * Delete Mapping for Homeowner using User ID and Homeowner ID - delete homeowner for a user
      * @param user_id user id
      * @param homeowner_id homeowner id
      * @return message stating success / failure
@@ -571,9 +566,9 @@ public class MainController {
         }
     }
 
-    // AutoQuote
+    // Auto Quote
     /**
-     * Get all auto quotes
+     * Get Mapping for all AutoQuotes - read all auto quotes
      * @return return all auto quotes
      */
     @GetMapping(path = RESTNamebook.USERS  + RESTNamebook.AUTOQUOTES)
@@ -582,7 +577,7 @@ public class MainController {
     }
 
     /**
-     * Get all auto quotes by user
+     * Get Mapping for all AutoQuotes using User ID - read all auto quotes of a user
      * @param user_id user id
      * @return return all auto quotes by user
      */
@@ -598,7 +593,7 @@ public class MainController {
     }
 
     /**
-     * Post Mapping for AutoQuote - Add a new auto quote
+     * Post Mapping for AutoQuote using User ID and Auto ID - create auto quote for a user's vehicle
      * @param user_id user id
      * @param auto_id auto id
      * @return message stating success
@@ -628,7 +623,7 @@ public class MainController {
     }
 
     /**
-     * Delete Mapping for AutoQuote based on ID - delete auto quote
+     * Delete Mapping for AutoQuote using User ID and AutoQuoteID - delete auto quote for a user's vehicle
      * @param user_id user id
      * @param autoquote_id auto quote id
      * @return message stating success / failure
@@ -652,7 +647,7 @@ public class MainController {
 
     // Home Quote
     /**
-     * Get all home quotes
+     * Get Mapping for all HomeQuotes - read all home quotes
      * @return return all home quotes
      */
     @GetMapping(path = RESTNamebook.USERS  + RESTNamebook.HOMEQUOTES)
@@ -661,7 +656,7 @@ public class MainController {
     }
 
     /**
-     * Get all home quotes by user
+     * Get Mapping for all HomeQuotes using User ID - read all home quotes for a user
      * @param user_id user id
      * @return return all home quotes by user
      */
@@ -677,7 +672,7 @@ public class MainController {
     }
 
     /**
-     * Post Mapping for HomeQuote - Add a new home quote
+     * Post Mapping for HomeQuote using User ID and Home ID - create home quote for a user's home
      * @param user_id user id
      * @param home_id home id
      * @return message stating success / failure
@@ -686,7 +681,7 @@ public class MainController {
     public @ResponseBody String addNewHomeQuote(@PathVariable(name = "user_id") Integer user_id,
                                                 @PathVariable(name = "home_id") Integer home_id) {
         Optional<User> user = userRepository.findById(user_id);
-        Optional<HomeOwner> homeowner = homeownerRepository.findById(home_id);
+        Optional<HomeOwner> homeowner = homeownerRepository.getHomeOwnerByUserId(user_id);
         Optional<Home> home = homeRepository.findById(home_id);
         if (user.isPresent()){
             if (homeowner.isPresent()){
@@ -707,7 +702,7 @@ public class MainController {
     }
 
     /**
-     * Delete Mapping for HomeQuote based on ID - delete home quote
+     * Delete Mapping for HomeQuote using User ID and HomeQuote ID - delete home quote for a user's home
      * @param user_id user id
      * @param homequote_id home quote id
      * @return message stating success / failure
@@ -731,7 +726,7 @@ public class MainController {
 
     // Auto Policy
     /**
-     * Get all auto policies
+     * Get Mapping for all AutoPolicies - read all auto policies
      * @return return all auto policies
      */
     @GetMapping(path = RESTNamebook.USERS + RESTNamebook.AUTOPOLICIES)
@@ -740,7 +735,7 @@ public class MainController {
     }
 
     /**
-     * Get all auto policies by user
+     * Get Mapping for all AutoPolicies using User ID - read all auto policies for a user
      * @param user_id user id
      * @return return all auto policies by user
      */
@@ -756,7 +751,7 @@ public class MainController {
     }
 
     /**
-     * Post Mapping for AutoPolicy - Add a new auto policy
+     * Post Mapping for AutoPolicy using User ID and AutoQuote ID - create auto policy for a user's auto quote
      * @param user_id user id
      * @param autoquote_id auto quote id
      * @return message stating success
@@ -776,12 +771,12 @@ public class MainController {
                 return "You haven't entered your auto quote information yet.";
             }
         } else {
-            return "User not found";
+            return "User not found.";
         }
     }
 
     /**
-     * Delete Mapping for AutoPolicy based on ID - delete auto policy
+     * Delete Mapping for AutoPolicy using User ID and AutoPolicy ID - delete auto policy for a user
      * @param user_id user id
      * @param autopolicy_id auto policy id
      * @return message stating success / failure
@@ -803,8 +798,9 @@ public class MainController {
         }
     }
 
+    // Home Policy
     /**
-     * Get all home policies
+     * Get Mapping for all HomePolicies - read all home policies
      * @return return all home policies
      */
     @GetMapping(path = RESTNamebook.USERS + RESTNamebook.HOMEPOLICIES)
@@ -813,7 +809,7 @@ public class MainController {
     }
 
     /**
-     * Get all home policies by user
+     * Get Mapping for all HomePolicies using User ID - read all home policies of a user
      * @param user_id user id
      * @return return all home policies by user
      */
@@ -829,7 +825,7 @@ public class MainController {
     }
 
     /**
-     * Post Mapping for HomePolicy based on ID - create a home policy
+     * Post Mapping for HomePolicy using User ID and HomeQuote ID - create home policy for a user's home quote
      * @param user_id user id
      * @param homequote_id home policy id
      * @return message stating success / failure
@@ -849,12 +845,12 @@ public class MainController {
                 return "You haven't entered your home quote information yet.";
             }
         } else {
-            return "User not found";
+            return "User not found.";
         }
     }
 
     /**
-     * Delete Mapping for HomePolicy based on ID - delete home policy
+     * Delete Mapping for HomePolicy using User ID and HomePolicy ID - delete home policy for a user
      * @param user_id user id
      * @param homepolicy_id home policy id
      * @return message stating success / failure
@@ -865,7 +861,7 @@ public class MainController {
         Optional<HomePolicy> homePolicy = homePolicyRepository.findById(homepolicy_id);
         if (homePolicy.isPresent()) {
             Optional<User> user = userRepository.findById(user_id);
-            if (user.isPresent()) {
+            if (user.isPresent() && Objects.equals(homePolicy.get().getInsuredPerson().getUser().getId(), user.get().getId())) {
                 homePolicyRepository.deleteById(homepolicy_id);
                 return "The home policy has been deleted from the database.";
             } else {

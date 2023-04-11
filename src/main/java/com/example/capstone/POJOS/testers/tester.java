@@ -11,8 +11,8 @@ public class tester {
 
         Vehicle vehicle = new Vehicle();
         vehicle.setYear(2023);
-        vehicle.setMake("Toyota");
         vehicle.setModel("Camry");
+        vehicle.setMake("Toyota");
 
         AutoQuote autoQuote = AutoQuoteFactory.createAutoQuote(vehicle, driver);
         System.out.println(autoQuote.getTotalPremium());
