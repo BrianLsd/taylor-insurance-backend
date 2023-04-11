@@ -11,5 +11,4 @@ public interface HomeRepository extends CrudRepository<Home, Integer> {
      * @return all homes of the user
      */
     Iterable<Home> getAllByUserId(Integer userId);
-
 }
