@@ -54,7 +54,7 @@ public class MainController {
      * @return user object
      */
     @CrossOrigin(origins = "*")
-    @GetMapping(path = RESTNamebook.USERS + RESTNamebook.USER_ID)
+    @GetMapping(path = RESTNamebook.USERS + "/{user_id}")
     public @ResponseBody Optional<User> getUserWithId(@PathVariable Integer user_id) {
         return userRepository.findById(user_id);
     }
@@ -85,7 +85,7 @@ public class MainController {
      * @return message stating success / failure
      */
     @CrossOrigin(origins = "*")
-    @PutMapping(path = RESTNamebook.USERS + RESTNamebook.USER_ID)
+    @PutMapping(path = RESTNamebook.USERS + "/{user_id}")
     public @ResponseBody String updateUser(@PathVariable Integer user_id, @RequestParam String name, @RequestParam String email) {
         Optional<User> optionalUser = userRepository.findById(user_id);
         if (optionalUser.isPresent()) {
@@ -106,7 +106,7 @@ public class MainController {
      * @return message stating success / failure
      */
     @CrossOrigin(origins = "*")
-    @DeleteMapping(path = RESTNamebook.USERS + RESTNamebook.USER_ID)
+    @DeleteMapping(path = RESTNamebook.USERS + "/{user_id}")
     public @ResponseBody String deleteUser(@PathVariable Integer user_id) {
         Optional<User> optionalUser = userRepository.findById(user_id);
         if (optionalUser.isPresent()) {
