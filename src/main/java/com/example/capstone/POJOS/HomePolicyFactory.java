@@ -27,13 +27,12 @@ public class HomePolicyFactory {
      * @param homePolicy Home Policy
      * @return homePolicy Home Policy
      */
-    public HomePolicy renewHomePolicy(HomePolicy homePolicy){
-        if (ChronoUnit.DAYS.between(homePolicy.getEndDate(), LocalDate.now()) <= 60){
+    public static HomePolicy renewHomePolicy(HomePolicy homePolicy){
+        if (ChronoUnit.DAYS.between(LocalDate.now(), homePolicy.getEndDate()) <= 60){
             return new HomePolicy.Builder(homePolicy.getInsuredPerson(), homePolicy.getHome(), homePolicy.getLiabilityLimit(),
                     homePolicy.getDeductible(), homePolicy.getContentsInsuranceLimit()
                     , homePolicy.getContentsDeductible(), homePolicy.getBasePremium(), homePolicy.getTax(), homePolicy.getTotalPremium()).build();
         } else {
-            System.out.println("Your policy is not available for renewal.");
             return homePolicy;
         }
     }

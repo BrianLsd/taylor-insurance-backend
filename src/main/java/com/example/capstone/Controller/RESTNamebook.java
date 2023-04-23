@@ -13,4 +13,5 @@ public class RESTNamebook {
     public static final String HOMEQUOTES = "/homequotes";
     public static final String AUTOPOLICIES = "/autopolicies";
     public static final String HOMEPOLICIES = "/homepolicies";
+    public static final String RENEW = "/renew";
 }

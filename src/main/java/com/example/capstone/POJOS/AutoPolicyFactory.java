@@ -27,11 +27,10 @@ public class AutoPolicyFactory {
      * @return autoPolicy Auto Policy
      */
     public static AutoPolicy renewAutoPolicy(AutoPolicy autoPolicy){
-        if (ChronoUnit.DAYS.between(autoPolicy.getEndDate(), LocalDate.now()) <= 60){
+        if (ChronoUnit.DAYS.between(LocalDate.now(), autoPolicy.getEndDate()) <= 60){
             return new AutoPolicy.Builder(autoPolicy.getDriver(), autoPolicy.getVehicle(), autoPolicy.getLiabilityLimit(),
                     autoPolicy.getDeductible(), autoPolicy.getBasePremium(), autoPolicy.getTax(), autoPolicy.getTotalPremium()).build();
         } else {
-            System.out.println("Your policy is not available for renewal.");
             return autoPolicy;
         }
     }

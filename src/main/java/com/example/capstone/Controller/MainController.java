@@ -41,6 +41,7 @@ public class MainController {
      *
      * @return all users
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS)
     public @ResponseBody Iterable<User> getAllUsers() {
         return userRepository.findAll();
@@ -52,6 +53,7 @@ public class MainController {
      * @param user_id user id
      * @return user object
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + RESTNamebook.USER_ID)
     public @ResponseBody Optional<User> getUserWithId(@PathVariable Integer user_id) {
         return userRepository.findById(user_id);
@@ -64,13 +66,14 @@ public class MainController {
      * @param email email of user
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS)
-    public @ResponseBody String addNewUser(@RequestParam String name, @RequestParam String email) {
+    public @ResponseBody Integer addNewUser(@RequestParam String name, @RequestParam String email) {
         User user = new User();
         user.setName(name);
         user.setEmail(email);
         userRepository.save(user);
-        return user.getName() + " has been saved into the database.";
+        return user.getId();
     }
 
     /**
@@ -81,6 +84,7 @@ public class MainController {
      * @param email   email of user
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @PutMapping(path = RESTNamebook.USERS + RESTNamebook.USER_ID)
     public @ResponseBody String updateUser(@PathVariable Integer user_id, @RequestParam String name, @RequestParam String email) {
         Optional<User> optionalUser = userRepository.findById(user_id);
@@ -89,7 +93,7 @@ public class MainController {
             user.setName(name);
             user.setEmail(email);
             userRepository.save(user);
-            return user.getName() + " has been updated in the database.";
+            return user.getName() + " has been updated.";
         } else {
             return "User not found.";
         }
@@ -101,6 +105,7 @@ public class MainController {
      * @param user_id user id
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @DeleteMapping(path = RESTNamebook.USERS + RESTNamebook.USER_ID)
     public @ResponseBody String deleteUser(@PathVariable Integer user_id) {
         Optional<User> optionalUser = userRepository.findById(user_id);
@@ -120,6 +125,7 @@ public class MainController {
      *
      * @return all homes
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + RESTNamebook.HOMES)
     public @ResponseBody Iterable<Home> getAllHomes() {
         return homeRepository.findAll();
@@ -131,6 +137,7 @@ public class MainController {
      * @param user_id user id
      * @return home object
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMES)
     public @ResponseBody Iterable<Home> getAllHomesByUser(@PathVariable(name = "user_id") Integer user_id) {
         Optional<User> user = userRepository.findById(user_id);
@@ -153,8 +160,9 @@ public class MainController {
      * @param location     location
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMES)
-    public @ResponseBody String addNewHome(
+    public @ResponseBody Integer addNewHome(
             @PathVariable(name = "user_id") Integer user_id,
             @RequestParam LocalDate dateBuilt,
             @RequestParam double value,
@@ -172,9 +180,9 @@ public class MainController {
         if (optionalUser.isPresent()) {
             home.setUser(optionalUser.get());
             homeRepository.save(home);
-            return "The home has been saved into the database.";
+            return home.getId();
         } else {
-            return "The home failed to be saved into the database.";
+            return 0;
         }
     }
 
@@ -189,6 +197,7 @@ public class MainController {
      * @param heatingType  heating type
      * @param location     location
      */
+    @CrossOrigin(origins = "*")
     @PutMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMES + "/{home_id}")
     public @ResponseBody String updateHome(@PathVariable Integer user_id, @PathVariable Integer home_id,
                                            @RequestParam LocalDate dateBuilt,
@@ -224,6 +233,7 @@ public class MainController {
      * @param home_id home id
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @DeleteMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMES + "/{home_id}")
     public @ResponseBody String deleteHome(@PathVariable Integer user_id, @PathVariable Integer home_id) {
         Optional<User> optionalUser = userRepository.findById(user_id);
@@ -247,6 +257,7 @@ public class MainController {
      *
      * @return Iterable of all autos
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + RESTNamebook.AUTOS)
     public @ResponseBody Iterable<Vehicle> getAllAutos() {
         return autoRepository.findAll();
@@ -258,6 +269,7 @@ public class MainController {
      * @param user_id user id
      * @return Iterable of all autos by user
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOS)
     public @ResponseBody Iterable<Vehicle> getAllAutosByUser(@PathVariable(name = "user_id") Integer user_id) {
         Optional<User> user = userRepository.findById(user_id);
@@ -278,8 +290,9 @@ public class MainController {
      * @param make    make
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOS)
-    public @ResponseBody String addNewAuto(@PathVariable(name = "user_id") Integer user_id,
+    public @ResponseBody Integer addNewAuto(@PathVariable(name = "user_id") Integer user_id,
                                            @RequestParam int year,
                                            @RequestParam String model,
                                            @RequestParam String make) {
@@ -292,9 +305,9 @@ public class MainController {
         if (optionalUser.isPresent()) {
             vehicle.setUser(optionalUser.get());
             autoRepository.save(vehicle);
-            return "The auto has been saved into the database.";
+            return vehicle.getId();
         } else {
-            return "The auto failed to be saved into the database.";
+            return 0;
         }
     }
 
@@ -305,6 +318,7 @@ public class MainController {
      * @param auto_id auto id
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @PutMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOS + "/{auto_id}")
     public @ResponseBody String updateAuto(@PathVariable(name = "user_id") Integer user_id,
                                            @PathVariable(name = "auto_id") Integer auto_id,
@@ -336,6 +350,7 @@ public class MainController {
      * @param auto_id auto id
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @DeleteMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOS + "/{auto_id}")
     public @ResponseBody String deleteAuto(@PathVariable Integer user_id,
                                            @PathVariable Integer auto_id) {
@@ -360,6 +375,7 @@ public class MainController {
      *
      * @return return all drivers
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + RESTNamebook.DRIVERS)
     public @ResponseBody Iterable<Driver> getAllDrivers() {
         return driverRepository.findAll();
@@ -371,6 +387,7 @@ public class MainController {
      * @param user_id user id
      * @return return all drivers by user ID
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.DRIVERS)
     public @ResponseBody Iterable<Driver> getAllDriversByUser(@PathVariable(name = "user_id") Integer user_id) {
         Optional<User> user = userRepository.findById(user_id);
@@ -391,6 +408,7 @@ public class MainController {
      * @param numberAccidents number of accidents
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.DRIVERS)
     public @ResponseBody String addNewDriver(@PathVariable(name = "user_id") Integer user_id,
                                              @RequestParam int age,
@@ -418,6 +436,7 @@ public class MainController {
      * @param driver_id driver id
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @PutMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.DRIVERS + "/{driver_id}")
     public @ResponseBody String updateDriver(@PathVariable(name = "user_id") Integer user_id,
                                              @PathVariable(name = "driver_id") Integer driver_id,
@@ -449,6 +468,7 @@ public class MainController {
      * @param driver_id driver id
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @DeleteMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.DRIVERS + "/{driver_id}")
     public @ResponseBody String deleteDriver(@PathVariable Integer user_id,
                                              @PathVariable Integer driver_id) {
@@ -472,6 +492,7 @@ public class MainController {
      * Get all homeowners
      * @return return all homeowners
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + RESTNamebook.HOMEOWNERS)
     public @ResponseBody Iterable<HomeOwner> getAllHomeowners() {
         return homeownerRepository.findAll();
@@ -482,6 +503,7 @@ public class MainController {
      * @param user_id user id
      * @return return all homeowners by user ID
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEOWNERS)
     public @ResponseBody Iterable<HomeOwner> getAllHomeownersByUser(@PathVariable(name = "user_id") Integer user_id) {
         Optional<User> user = userRepository.findById(user_id);
@@ -500,6 +522,7 @@ public class MainController {
      * @param address address
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEOWNERS)
     public @ResponseBody String addNewHomeowner(@PathVariable(name = "user_id") Integer user_id,
                                                 @RequestParam int age,
@@ -526,6 +549,7 @@ public class MainController {
      * @param address address
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @PutMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEOWNERS + "/{homeowner_id}")
     public @ResponseBody String updateHomeowner(@PathVariable(name = "user_id") Integer user_id,
                                                 @PathVariable(name = "homeowner_id") Integer homeowner_id,
@@ -554,6 +578,7 @@ public class MainController {
      * @param homeowner_id homeowner id
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @DeleteMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEOWNERS + "/{homeowner_id}")
     public @ResponseBody String deleteHomeowner(@PathVariable Integer user_id,
                                                 @PathVariable Integer homeowner_id) {
@@ -576,6 +601,7 @@ public class MainController {
      * Get all auto quotes
      * @return return all auto quotes
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS  + RESTNamebook.AUTOQUOTES)
     public @ResponseBody Iterable<AutoQuote> getAllAutoQuotes() {
         return autoQuoteRepository.findAll();
@@ -586,6 +612,7 @@ public class MainController {
      * @param user_id user id
      * @return return all auto quotes by user
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOQUOTES)
     public @ResponseBody Iterable<AutoQuote> getAllAutoQuotesByUser(@PathVariable(name = "user_id") Integer user_id) {
         Optional<User> user = userRepository.findById(user_id);
@@ -598,13 +625,25 @@ public class MainController {
     }
 
     /**
+     * Get an auto quotes by quote ID
+     * @param autoquote_id auto id
+     * @return return all auto quotes by auto
+     */
+    @CrossOrigin(origins = "*")
+    @GetMapping(path = RESTNamebook.USERS  + RESTNamebook.AUTOQUOTES + "/{autoquote_id}")
+    public @ResponseBody Optional<AutoQuote> getAutoQuoteByID(@PathVariable(name = "autoquote_id") Integer autoquote_id){
+        return autoQuoteRepository.findById(autoquote_id);
+    }
+
+    /**
      * Post Mapping for AutoQuote - Add a new auto quote
      * @param user_id user id
      * @param auto_id auto id
      * @return message stating success
      */
+    @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOQUOTES + "/{auto_id}")
-    public @ResponseBody String addNewAutoQuote(@PathVariable(name = "user_id") Integer user_id,
+    public @ResponseBody Integer addNewAutoQuote(@PathVariable(name = "user_id") Integer user_id,
                                                 @PathVariable(name = "auto_id") Integer auto_id) {
         Optional<User> user = userRepository.findById(user_id);
         Optional<Driver> driver = driverRepository.getDriverByUserId(user_id);
@@ -615,15 +654,15 @@ public class MainController {
                     AutoQuote autoQuote = AutoQuoteFactory.createAutoQuote(auto.get(), driver.get());
                     autoQuote.setUser(user.get());
                     autoQuoteRepository.save(autoQuote);
+                    return autoQuote.getId();
                 } else {
-                    return "You haven't entered your vehicle information yet.";
+                    return 0;
                 }
             } else {
-                return "You haven't entered your driver information yet.";
+                return -1;
             }
-            return "The auto quote has been saved into the database.";
         } else {
-            return "User not found";
+            return -2;
         }
     }
 
@@ -655,6 +694,7 @@ public class MainController {
      * Get all home quotes
      * @return return all home quotes
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS  + RESTNamebook.HOMEQUOTES)
     public @ResponseBody Iterable<HomeQuote> getAllHomeQuotes() {
         return homeQuoteRepository.findAll();
@@ -665,6 +705,7 @@ public class MainController {
      * @param user_id user id
      * @return return all home quotes by user
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEQUOTES)
     public @ResponseBody Iterable<HomeQuote> getAllHomeQuotesByUser(@PathVariable(name = "user_id") Integer user_id) {
         Optional<User> user = userRepository.findById(user_id);
@@ -677,16 +718,28 @@ public class MainController {
     }
 
     /**
+     * Get home quote by id
+     * @param homequote_id home quote id
+     * @return return home quote by id
+     */
+    @CrossOrigin(origins = "*")
+    @GetMapping(path = RESTNamebook.USERS  + RESTNamebook.HOMEQUOTES + "/{homequote_id}")
+    public @ResponseBody Optional<HomeQuote> getHomeQuoteByID(@PathVariable(name = "homequote_id") Integer homequote_id){
+        return homeQuoteRepository.findById(homequote_id);
+    }
+
+    /**
      * Post Mapping for HomeQuote - Add a new home quote
      * @param user_id user id
      * @param home_id home id
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEQUOTES + "/{home_id}")
-    public @ResponseBody String addNewHomeQuote(@PathVariable(name = "user_id") Integer user_id,
+    public @ResponseBody Integer addNewHomeQuote(@PathVariable(name = "user_id") Integer user_id,
                                                 @PathVariable(name = "home_id") Integer home_id) {
         Optional<User> user = userRepository.findById(user_id);
-        Optional<HomeOwner> homeowner = homeownerRepository.findById(home_id);
+        Optional<HomeOwner> homeowner = homeownerRepository.getHomeOwnerByUserId(user_id);
         Optional<Home> home = homeRepository.findById(home_id);
         if (user.isPresent()){
             if (homeowner.isPresent()){
@@ -694,15 +747,15 @@ public class MainController {
                     HomeQuote homeQuote = HomeQuoteFactory.createHomeQuote(home.get(), homeowner.get());
                     homeQuote.setUser(user.get());
                     homeQuoteRepository.save(homeQuote);
+                    return homeQuote.getId();
                 } else {
-                    return "You haven't entered your home information yet.";
+                    return 0;
                 }
             } else {
-                return "You haven't entered your homeowner information yet.";
+                return -1;
             }
-            return "The home quote has been saved into the database.";
         } else {
-            return "User not found";
+            return -2;
         }
     }
 
@@ -734,6 +787,7 @@ public class MainController {
      * Get all auto policies
      * @return return all auto policies
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + RESTNamebook.AUTOPOLICIES)
     public @ResponseBody Iterable<AutoPolicy> getAllAutoPolicies() {
         return autoPolicyRepository.findAll();
@@ -744,6 +798,7 @@ public class MainController {
      * @param user_id user id
      * @return return all auto policies by user
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOPOLICIES)
     public @ResponseBody Iterable<AutoPolicy> getAllAutoPoliciesByUser(@PathVariable(name = "user_id") Integer user_id) {
         Optional<User> user = userRepository.findById(user_id);
@@ -756,13 +811,25 @@ public class MainController {
     }
 
     /**
+     * Get auto policy by id
+     * @param autopolicy_id auto policy id
+     * @return return auto policy by id
+     */
+    @CrossOrigin(origins = "*")
+    @GetMapping(path = RESTNamebook.USERS + RESTNamebook.AUTOPOLICIES + "/{autopolicy_id}")
+    public @ResponseBody Optional<AutoPolicy> getAutoPolicyById(@PathVariable(name = "autopolicy_id") Integer autopolicy_id) {
+        return autoPolicyRepository.findById(autopolicy_id);
+    }
+
+    /**
      * Post Mapping for AutoPolicy - Add a new auto policy
      * @param user_id user id
      * @param autoquote_id auto quote id
      * @return message stating success
      */
+    @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOPOLICIES + "/{autoquote_id}")
-    public @ResponseBody String addNewAutoPolicy(@PathVariable(name = "user_id") Integer user_id,
+    public @ResponseBody Integer addNewAutoPolicy(@PathVariable(name = "user_id") Integer user_id,
                                                  @PathVariable(name = "autoquote_id") Integer autoquote_id) {
         Optional<User> user = userRepository.findById(user_id);
         Optional<AutoQuote> autoQuote = autoQuoteRepository.findById(autoquote_id);
@@ -771,12 +838,42 @@ public class MainController {
                 AutoPolicy autoPolicy = AutoPolicyFactory.createAutoPolicy(autoQuote.get());
                 autoPolicy.setUser(user.get());
                 autoPolicyRepository.save(autoPolicy);
-                return "The auto policy has been saved into the database.";
+                return autoPolicy.getId();
             } else {
-                return "You haven't entered your auto quote information yet.";
+                return 0;
             }
         } else {
-            return "User not found";
+            return -1;
+        }
+    }
+
+    /**
+     * Post Mapping for AutoPolicy based on ID - renew auto policy
+     * @param user_id user id
+     * @param autopolicy_id auto policy id
+     * @return message stating success / failure
+     */
+    @CrossOrigin(origins = "*")
+    @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOPOLICIES + RESTNamebook.RENEW + "/{autopolicy_id}")
+    public @ResponseBody Integer renewAutoPolicy(@PathVariable(name = "user_id") Integer user_id,
+                                                 @PathVariable(name = "autopolicy_id") Integer autopolicy_id) {
+        Optional<User> user = userRepository.findById(user_id);
+        Optional<AutoPolicy> autoPolicy = autoPolicyRepository.findById(autopolicy_id);
+        if (user.isPresent()){
+            if (autoPolicy.isPresent()){
+                AutoPolicy newAutoPolicy = AutoPolicyFactory.renewAutoPolicy(autoPolicy.get());
+                if (!Objects.equals(newAutoPolicy.getId(), autoPolicy.get().getId())) {
+                    autoPolicyRepository.delete(autoPolicy.get());
+                    autoPolicyRepository.save(newAutoPolicy);
+                    return newAutoPolicy.getId();
+                } else {
+                    return 0;
+                }
+            } else {
+                return -1;
+            }
+        } else {
+            return -2;
         }
     }
 
@@ -786,6 +883,7 @@ public class MainController {
      * @param autopolicy_id auto policy id
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @DeleteMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOPOLICIES + "/{autopolicy_id}")
     public @ResponseBody String deleteAutoPolicy(@PathVariable(name = "user_id") Integer user_id,
                                                  @PathVariable(name = "autopolicy_id") Integer autopolicy_id) {
@@ -794,7 +892,7 @@ public class MainController {
             Optional<User> user = userRepository.findById(user_id);
             if (user.isPresent() && Objects.equals(autoPolicy.get().getInsuredPerson().getUser().getId(), user.get().getId())) {
                 autoPolicyRepository.deleteById(autopolicy_id);
-                return "The auto policy has been deleted from the database.";
+                return "The auto policy has been cancelled.";
             } else {
                 return "User not found.";
             }
@@ -807,6 +905,7 @@ public class MainController {
      * Get all home policies
      * @return return all home policies
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + RESTNamebook.HOMEPOLICIES)
     public @ResponseBody Iterable<HomePolicy> getAllHomePolicies() {
         return homePolicyRepository.findAll();
@@ -817,6 +916,7 @@ public class MainController {
      * @param user_id user id
      * @return return all home policies by user
      */
+    @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEPOLICIES)
     public @ResponseBody Iterable<HomePolicy> getAllHomePoliciesByUser(@PathVariable(name = "user_id") Integer user_id) {
         Optional<User> user = userRepository.findById(user_id);
@@ -829,13 +929,25 @@ public class MainController {
     }
 
     /**
+     * Get Mapping for HomePolicy based on ID - get home policy
+     * @param homepolicy_id home policy id
+     * @return home policy
+     */
+    @CrossOrigin(origins = "*")
+    @GetMapping(path = RESTNamebook.USERS + RESTNamebook.HOMEPOLICIES + "/{homepolicy_id}")
+    public @ResponseBody Optional<HomePolicy> getHomePolicyById(@PathVariable(name = "homepolicy_id") Integer homepolicy_id) {
+        return homePolicyRepository.findById(homepolicy_id);
+    }
+
+    /**
      * Post Mapping for HomePolicy based on ID - create a home policy
      * @param user_id user id
      * @param homequote_id home policy id
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEPOLICIES + "/{homequote_id}")
-    public @ResponseBody String addNewHomePolicy(@PathVariable(name = "user_id") Integer user_id,
+    public @ResponseBody Integer addNewHomePolicy(@PathVariable(name = "user_id") Integer user_id,
                                                  @PathVariable(name = "homequote_id") Integer homequote_id) {
         Optional<User> user = userRepository.findById(user_id);
         Optional<HomeQuote> homeQuote = homeQuoteRepository.findById(homequote_id);
@@ -844,12 +956,42 @@ public class MainController {
                 HomePolicy homePolicy = HomePolicyFactory.createHomePolicy(homeQuote.get());
                 homePolicy.setUser(user.get());
                 homePolicyRepository.save(homePolicy);
-                return "The home policy has been saved into the database.";
+                return homePolicy.getId();
             } else {
-                return "You haven't entered your home quote information yet.";
+                return 0;
             }
         } else {
-            return "User not found";
+            return -1;
+        }
+    }
+
+    /**
+     * Post Mapping for HomePolicy based on ID - renew home policy
+     * @param user_id user id
+     * @param homepolicy_id home policy id
+     * @return message stating success / failure
+     */
+    @CrossOrigin(origins = "*")
+    @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEPOLICIES + RESTNamebook.RENEW + "/{homepolicy_id}")
+    public @ResponseBody Integer renewHomePolicy(@PathVariable(name = "user_id") Integer user_id,
+                                                  @PathVariable(name = "homepolicy_id") Integer homepolicy_id) {
+        Optional<User> user = userRepository.findById(user_id);
+        Optional<HomePolicy> homePolicy = homePolicyRepository.findById(homepolicy_id);
+        if (user.isPresent()){
+            if (homePolicy.isPresent()){
+                HomePolicy newHomePolicy = HomePolicyFactory.renewHomePolicy(homePolicy.get());
+                if (!Objects.equals(newHomePolicy.getId(), homePolicy.get().getId())) {
+                    homePolicyRepository.delete(homePolicy.get());
+                    homePolicyRepository.save(newHomePolicy);
+                    return newHomePolicy.getId();
+                } else {
+                    return 0;
+                }
+            } else {
+                return -1;
+            }
+        } else {
+            return -2;
         }
     }
 
@@ -859,6 +1001,7 @@ public class MainController {
      * @param homepolicy_id home policy id
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @DeleteMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEPOLICIES + "/{homepolicy_id}")
     public @ResponseBody String deleteHomePolicy(@PathVariable(name = "user_id") Integer user_id,
                                                  @PathVariable(name = "homepolicy_id") Integer homepolicy_id) {
@@ -867,7 +1010,7 @@ public class MainController {
             Optional<User> user = userRepository.findById(user_id);
             if (user.isPresent()) {
                 homePolicyRepository.deleteById(homepolicy_id);
-                return "The home policy has been deleted from the database.";
+                return "The home policy has been cancelled.";
             } else {
                 return "User not found.";
             }
