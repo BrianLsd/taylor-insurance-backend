@@ -34,12 +34,10 @@ public class MainController {
     @Autowired
     private HomePolicyRepository homePolicyRepository;
 
-    // User - use this to login
-
     /**
-     * Get Mapping for User
+     * Get Mapping for all Users - read all users
      *
-     * @return all users
+     * @return Iterable of all users
      */
     @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS)
@@ -100,7 +98,7 @@ public class MainController {
     }
 
     /**
-     * Delete Mapping for User based on ID
+     * Delete Mapping for User based on ID - delete user
      *
      * @param user_id user id
      * @return message stating success / failure
@@ -118,10 +116,8 @@ public class MainController {
         }
     }
 
-    // Home
-
     /**
-     * Get Mapping for Home
+     * Get Mapping for Home - read all homes
      *
      * @return all homes
      */
@@ -132,7 +128,7 @@ public class MainController {
     }
 
     /**
-     * Get Mapping for Home based on ID
+     * Get Mapping for Home based on ID - read homes by user id
      *
      * @param user_id user id
      * @return home object
@@ -158,7 +154,7 @@ public class MainController {
      * @param dwellingType dwelling type
      * @param heatingType  heating type
      * @param location     location
-     * @return message stating success / failure
+     * @return home id or 0 if user not found
      */
     @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMES)
@@ -196,6 +192,7 @@ public class MainController {
      * @param dwellingType dwelling type
      * @param heatingType  heating type
      * @param location     location
+     * @return message stating success / failure
      */
     @CrossOrigin(origins = "*")
     @PutMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMES + "/{home_id}")
@@ -227,7 +224,7 @@ public class MainController {
     }
 
     /**
-     * Delete Mapping for Home based on ID
+     * Delete Mapping for Home based on ID - delete home
      *
      * @param user_id user id
      * @param home_id home id
@@ -250,12 +247,10 @@ public class MainController {
         }
     }
 
-    // Auto
-
     /**
-     * Get all autos
+     * Get Mapping for Auto - read all autos
      *
-     * @return Iterable of all autos
+     * @return Iterable of all autos in database
      */
     @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + RESTNamebook.AUTOS)
@@ -264,7 +259,7 @@ public class MainController {
     }
 
     /**
-     * Get all autos by user
+     * Get Mapping for Auto based on ID - read autos by user id
      *
      * @param user_id user id
      * @return Iterable of all autos by user
@@ -282,13 +277,13 @@ public class MainController {
     }
 
     /**
-     * Get auto by id
+     * Post Mapping for Auto - create auto
      *
      * @param user_id user id
      * @param year    year
      * @param model   model
      * @param make    make
-     * @return message stating success / failure
+     * @return auto ID or 0 if user not found
      */
     @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOS)
@@ -312,7 +307,7 @@ public class MainController {
     }
 
     /**
-     * Delete Mapping for Auto based on ID
+     * Put Mapping for Auto based on ID - update auto
      *
      * @param user_id user id
      * @param auto_id auto id
@@ -344,7 +339,7 @@ public class MainController {
     }
 
     /**
-     * Delete Mapping for Auto based on ID
+     * Delete Mapping for Auto based on ID - delete auto
      *
      * @param user_id user id
      * @param auto_id auto id
@@ -368,10 +363,8 @@ public class MainController {
         }
     }
 
-    // Driver - if a user chooses to go with auto, create a driver object for the user
-
     /**
-     * Get all drivers
+     * Get all drivers - read all drivers
      *
      * @return return all drivers
      */
@@ -382,7 +375,7 @@ public class MainController {
     }
 
     /**
-     * Get drivers by ID
+     * Get drivers by ID - read drivers by user id
      *
      * @param user_id user id
      * @return return all drivers by user ID
@@ -400,7 +393,7 @@ public class MainController {
     }
 
     /**
-     * Add a new driver
+     * Add a new driver - create a new user
      *
      * @param user_id         user id
      * @param age             age
@@ -486,10 +479,8 @@ public class MainController {
         }
     }
 
-    // Homeowner - if a user chooses to go with home, create a Homeowner object for the user
-
     /**
-     * Get all homeowners
+     * Get all homeowners - read all homeowners
      * @return return all homeowners
      */
     @CrossOrigin(origins = "*")
@@ -499,7 +490,7 @@ public class MainController {
     }
 
     /**
-     * Get a homeowner by ID
+     * Get homeowners by ID - read homeowners by user id
      * @param user_id user id
      * @return return all homeowners by user ID
      */
@@ -516,7 +507,7 @@ public class MainController {
     }
 
     /**
-     * Post Mapping for Homeowner - Add a new homeowner
+     * Post Mapping for Homeowner - create a new homeowner
      * @param user_id user id
      * @param age age
      * @param address address
@@ -596,9 +587,8 @@ public class MainController {
         }
     }
 
-    // AutoQuote
     /**
-     * Get all auto quotes
+     * Get all auto quotes - read all auto quotes
      * @return return all auto quotes
      */
     @CrossOrigin(origins = "*")
@@ -608,7 +598,7 @@ public class MainController {
     }
 
     /**
-     * Get all auto quotes by user
+     * Get all auto quotes by user - read all auto quotes by user ID
      * @param user_id user id
      * @return return all auto quotes by user
      */
@@ -625,9 +615,9 @@ public class MainController {
     }
 
     /**
-     * Get an auto quotes by quote ID
+     * Get an auto quotes by quote ID - read an auto quote by quote ID
      * @param autoquote_id auto id
-     * @return return all auto quotes by auto
+     * @return return an auto quote by quote ID
      */
     @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS  + RESTNamebook.AUTOQUOTES + "/{autoquote_id}")
@@ -639,7 +629,7 @@ public class MainController {
      * Post Mapping for AutoQuote - Add a new auto quote
      * @param user_id user id
      * @param auto_id auto id
-     * @return message stating success
+     * @return auto quote id or 0 if auto is not found, or -1 if driver is not found, or -2 if user is not found
      */
     @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOQUOTES + "/{auto_id}")
@@ -672,6 +662,7 @@ public class MainController {
      * @param autoquote_id auto quote id
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @DeleteMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOQUOTES + "/{autoquote_id}")
     public @ResponseBody String deleteAutoQuote(@PathVariable(name = "user_id") Integer user_id,
                                                 @PathVariable(name = "autoquote_id") Integer autoquote_id) {
@@ -680,7 +671,7 @@ public class MainController {
             Optional<User> user = userRepository.findById(user_id);
             if (user.isPresent() && Objects.equals(autoQuote.get().getInsuredPerson().getUser().getId(), user.get().getId())){
                 autoQuoteRepository.deleteById(autoquote_id);
-                return "The auto quote has been deleted from the database.";
+                return "The auto quote has been cancelled.";
             } else {
                 return "User not found.";
             }
@@ -689,9 +680,8 @@ public class MainController {
         }
     }
 
-    // Home Quote
     /**
-     * Get all home quotes
+     * Get all home quotes - read all home quotes
      * @return return all home quotes
      */
     @CrossOrigin(origins = "*")
@@ -701,7 +691,7 @@ public class MainController {
     }
 
     /**
-     * Get all home quotes by user
+     * Get all home quotes by user - read all home quotes by user ID
      * @param user_id user id
      * @return return all home quotes by user
      */
@@ -718,7 +708,7 @@ public class MainController {
     }
 
     /**
-     * Get home quote by id
+     * Get home quote by id - read a home quote by id
      * @param homequote_id home quote id
      * @return return home quote by id
      */
@@ -729,10 +719,10 @@ public class MainController {
     }
 
     /**
-     * Post Mapping for HomeQuote - Add a new home quote
+     * Post Mapping for HomeQuote - create a new home quote
      * @param user_id user id
      * @param home_id home id
-     * @return message stating success / failure
+     * @return home quote id or 0 if home is not found, or -1 if homeowner is not found, or -2 if user is not found
      */
     @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEQUOTES + "/{home_id}")
@@ -765,6 +755,7 @@ public class MainController {
      * @param homequote_id home quote id
      * @return message stating success / failure
      */
+    @CrossOrigin(origins = "*")
     @DeleteMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEQUOTES + "/{homequote_id}")
     public @ResponseBody String deleteHomeQuote(@PathVariable(name = "user_id") Integer user_id,
                                                 @PathVariable(name = "homequote_id") Integer homequote_id) {
@@ -773,7 +764,7 @@ public class MainController {
             Optional<User> user = userRepository.findById(user_id);
             if (user.isPresent() && Objects.equals(homeQuote.get().getInsuredPerson().getUser().getId(), user.get().getId())) {
                 homeQuoteRepository.deleteById(homequote_id);
-                return "The home quote has been deleted from the database.";
+                return "The home quote has been cancelled.";
             } else {
                 return "User not found.";
             }
@@ -782,9 +773,8 @@ public class MainController {
         }
     }
 
-    // Auto Policy
     /**
-     * Get all auto policies
+     * Get all auto policies - read all auto policies
      * @return return all auto policies
      */
     @CrossOrigin(origins = "*")
@@ -794,7 +784,7 @@ public class MainController {
     }
 
     /**
-     * Get all auto policies by user
+     * Get all auto policies by user - read all auto policies by user ID
      * @param user_id user id
      * @return return all auto policies by user
      */
@@ -811,7 +801,7 @@ public class MainController {
     }
 
     /**
-     * Get auto policy by id
+     * Get auto policy by id - read an auto policy by id
      * @param autopolicy_id auto policy id
      * @return return auto policy by id
      */
@@ -825,7 +815,7 @@ public class MainController {
      * Post Mapping for AutoPolicy - Add a new auto policy
      * @param user_id user id
      * @param autoquote_id auto quote id
-     * @return message stating success
+     * @return auto policy id or 0 if auto quote is not found, or -1 if user is not found
      */
     @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOPOLICIES + "/{autoquote_id}")
@@ -851,7 +841,8 @@ public class MainController {
      * Post Mapping for AutoPolicy based on ID - renew auto policy
      * @param user_id user id
      * @param autopolicy_id auto policy id
-     * @return message stating success / failure
+     * @return auto policy id or 0 if new auto policy and current auto policy is the same, or -1 if auto policy is not found,
+     * or -2 if user is not found
      */
     @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.AUTOPOLICIES + RESTNamebook.RENEW + "/{autopolicy_id}")
@@ -902,7 +893,7 @@ public class MainController {
     }
 
     /**
-     * Get all home policies
+     * Get all home policies - read all home policies
      * @return return all home policies
      */
     @CrossOrigin(origins = "*")
@@ -912,9 +903,9 @@ public class MainController {
     }
 
     /**
-     * Get all home policies by user
+     * Get all home policies by user - read all home policies by user
      * @param user_id user id
-     * @return return all home policies by user
+     * @return return all home policies by user ID
      */
     @CrossOrigin(origins = "*")
     @GetMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEPOLICIES)
@@ -929,7 +920,7 @@ public class MainController {
     }
 
     /**
-     * Get Mapping for HomePolicy based on ID - get home policy
+     * Get Mapping for HomePolicy based on ID - read home policy by policy id
      * @param homepolicy_id home policy id
      * @return home policy
      */
@@ -943,7 +934,7 @@ public class MainController {
      * Post Mapping for HomePolicy based on ID - create a home policy
      * @param user_id user id
      * @param homequote_id home policy id
-     * @return message stating success / failure
+     * @return home policy id or 0 if home quote is not found, or -1 if user is not found
      */
     @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEPOLICIES + "/{homequote_id}")
@@ -969,7 +960,8 @@ public class MainController {
      * Post Mapping for HomePolicy based on ID - renew home policy
      * @param user_id user id
      * @param homepolicy_id home policy id
-     * @return message stating success / failure
+     * @return new hom policy id, or 0 if the new policy id and the current policy id are the same, or
+     * -1 if the home policy is not found, or -2 if the user is not found
      */
     @CrossOrigin(origins = "*")
     @PostMapping(path = RESTNamebook.USERS + "/{user_id}" + RESTNamebook.HOMEPOLICIES + RESTNamebook.RENEW + "/{homepolicy_id}")
